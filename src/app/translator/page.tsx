@@ -9,7 +9,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import type { TranslateTextOutput } from "@/ai/flows/translator";
-import { ArrowRight, BookOpen, Repeat, Languages, Volume2, Loader2 } from "lucide-react";
+import { ArrowRight, BookOpen, Repeat, Languages, Volume2, Loader2, Mic } from "lucide-react";
+
+// SpeechRecognition type might not be available in global scope for TypeScript
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
 
 export default function TranslatorPage() {
   const [inputValue, setInputValue] = useState("");
@@ -17,7 +25,9 @@ export default function TranslatorPage() {
   const [result, setResult] = useState<TranslateTextOutput | null>(null);
   const [isAudioLoading, setIsAudioLoading] = useState(false);
   const [audioSrc, setAudioSrc] = useState<string | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const { targetLanguage } = useLanguageStore();
   const { toast } = useToast();
 
@@ -26,6 +36,56 @@ export default function TranslatorPage() {
         audioRef.current.play().catch(e => console.error("Audio play failed", e));
     }
   }, [audioSrc]);
+
+  useEffect(() => {
+    const SpeechRecognitionAPI =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognitionAPI) {
+      const recognition = new SpeechRecognitionAPI();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = "en-US";
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInputValue((prev) => (prev ? prev.trim() + " " + transcript : transcript));
+      };
+
+      recognition.onerror = (event: any) => {
+        toast({
+          variant: "destructive",
+          title: "Speech Recognition Error",
+          description: `An error occurred: ${event.error}`,
+        });
+        setIsRecording(false);
+      };
+      
+      recognition.onend = () => {
+        setIsRecording(false);
+      };
+      
+      recognitionRef.current = recognition;
+    }
+  }, [toast]);
+
+  const handleMicClick = () => {
+    if (!recognitionRef.current) {
+      toast({
+        variant: "destructive",
+        title: "Browser Not Supported",
+        description: "Your browser does not support speech recognition.",
+      });
+      return;
+    }
+
+    if (isRecording) {
+      recognitionRef.current.stop();
+    } else {
+      recognitionRef.current.start();
+      setIsRecording(true);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,14 +147,28 @@ export default function TranslatorPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <Textarea
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Enter text in English to translate..."
-                rows={5}
-                disabled={isLoading}
-              />
-              <Button type="submit" disabled={isLoading || !inputValue.trim()} className="self-start">
+              <div className="relative">
+                <Textarea
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder={isRecording ? "Listening..." : "Enter text in English to translate, or use the microphone..."}
+                  rows={5}
+                  disabled={isLoading || isRecording}
+                  className="pr-12"
+                />
+                <Button
+                  type="button"
+                  variant={isRecording ? "destructive" : "ghost"}
+                  size="icon"
+                  onClick={handleMicClick}
+                  disabled={isLoading}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8"
+                  aria-label={isRecording ? "Stop recording" : "Start recording"}
+                >
+                  <Mic className="h-4 w-4" />
+                </Button>
+              </div>
+              <Button type="submit" disabled={isLoading || isRecording || !inputValue.trim()} className="self-start">
                 {isLoading ? "Translating..." : "Translate"}
                 {!isLoading && <ArrowRight className="ml-2" />}
               </Button>
