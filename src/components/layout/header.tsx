@@ -27,7 +27,7 @@ export function Header() {
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2">
             <MessageSquareHeart className="h-6 w-6 text-primary" />
-            <span className="font-bold font-headline text-lg">Talki</span>
+            <span className="font-bold font-headline text-lg">VociVoice</span>
           </Link>
           <nav className="hidden md:flex items-center gap-1">
             <Link
