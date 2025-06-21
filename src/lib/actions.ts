@@ -16,6 +16,24 @@ import {
   getWordDefinition,
   type WordDefinitionInput
 } from "@/ai/flows/word-definition";
+import {
+  textToSpeech,
+  type TextToSpeechInput,
+} from "@/ai/flows/tts";
+
+export async function getAudioForText(input: TextToSpeechInput) {
+  "use server";
+  try {
+    const response = await textToSpeech(input);
+    return { success: true, data: response };
+  } catch (error) {
+    console.error("Error in getAudioForText:", error);
+    return {
+      success: false,
+      error: "An error occurred while generating audio.",
+    };
+  }
+}
 
 export async function getWordDefinitionAction(input: WordDefinitionInput) {
   "use server";

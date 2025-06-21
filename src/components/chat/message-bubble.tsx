@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { type ChatMessage } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Bot, User } from "lucide-react";
+import { Bot, User, Volume2, Loader2 } from "lucide-react";
 import { useVocabularyStore } from "@/hooks/use-vocabulary-store";
 import { useLanguageStore } from "@/hooks/use-language-store";
-import { getWordDefinitionAction } from "@/lib/actions";
+import { getWordDefinitionAction, getAudioForText } from "@/lib/actions";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 
 interface MessageBubbleProps {
   message: ChatMessage;
@@ -16,6 +17,9 @@ interface MessageBubbleProps {
 
 const MessageBubble = ({ message }: MessageBubbleProps) => {
   const [loadingWord, setLoadingWord] = useState<string | null>(null);
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
+  const [audioSrc, setAudioSrc] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const isUser = message.role === "user";
   const { addWord } = useVocabularyStore();
   const { targetLanguage } = useLanguageStore();
@@ -68,6 +72,32 @@ const MessageBubble = ({ message }: MessageBubbleProps) => {
 
     setLoadingWord(null);
   };
+  
+  const handleListen = async () => {
+    if (isUser || !message.content) return;
+
+    setIsAudioLoading(true);
+    setAudioSrc(null);
+    const response = await getAudioForText({ text: message.content });
+
+    if (response.success && response.data) {
+      setAudioSrc(response.data.audioDataUri);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Audio Error",
+        description: response.error,
+      });
+    }
+    setIsAudioLoading(false);
+  };
+  
+  useEffect(() => {
+    if (audioSrc && audioRef.current) {
+      audioRef.current.play().catch(e => console.error("Audio play failed", e));
+    }
+  }, [audioSrc]);
+
 
   const renderContent = () => {
     if (isUser) {
@@ -103,12 +133,12 @@ const MessageBubble = ({ message }: MessageBubbleProps) => {
   return (
     <div
       className={cn(
-        "flex items-start gap-3",
+        "flex items-center gap-2",
         isUser ? "justify-end" : "justify-start"
       )}
     >
       {!isUser && (
-        <Avatar className="h-8 w-8">
+        <Avatar className="h-8 w-8 self-start">
           <AvatarFallback className="bg-primary/20 text-primary">
             <Bot className="h-5 w-5" />
           </AvatarFallback>
@@ -124,6 +154,14 @@ const MessageBubble = ({ message }: MessageBubbleProps) => {
       >
         {renderContent()}
       </div>
+      {!isUser && (
+        <>
+            <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0" onClick={handleListen} disabled={isAudioLoading}>
+                {isAudioLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Volume2 className="h-4 w-4" />}
+            </Button>
+            {audioSrc && <audio ref={audioRef} src={audioSrc} className="hidden" />}
+        </>
+      )}
       {isUser && (
          <Avatar className="h-8 w-8">
           <AvatarFallback className="bg-accent text-accent-foreground">

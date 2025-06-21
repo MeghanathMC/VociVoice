@@ -1,22 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLanguageStore } from "@/hooks/use-language-store";
-import { getTranslation } from "@/lib/actions";
+import { getTranslation, getAudioForText } from "@/lib/actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import type { TranslateTextOutput } from "@/ai/flows/translator";
-import { ArrowRight, BookOpen, Repeat, Languages } from "lucide-react";
+import { ArrowRight, BookOpen, Repeat, Languages, Volume2, Loader2 } from "lucide-react";
 
 export default function TranslatorPage() {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<TranslateTextOutput | null>(null);
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
+  const [audioSrc, setAudioSrc] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const { targetLanguage } = useLanguageStore();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (audioSrc && audioRef.current) {
+        audioRef.current.play().catch(e => console.error("Audio play failed", e));
+    }
+  }, [audioSrc]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +33,7 @@ export default function TranslatorPage() {
 
     setIsLoading(true);
     setResult(null);
+    setAudioSrc(null);
 
     const response = await getTranslation({
       text: inputValue,
@@ -40,6 +50,23 @@ export default function TranslatorPage() {
       });
     }
     setIsLoading(false);
+  };
+
+  const handleListen = async () => {
+    if (!result?.translatedText) return;
+
+    setIsAudioLoading(true);
+    const response = await getAudioForText({ text: result.translatedText });
+    if (response.success && response.data) {
+      setAudioSrc(response.data.audioDataUri);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Audio Error",
+        description: response.error,
+      });
+    }
+    setIsAudioLoading(false);
   };
 
   return (
@@ -81,8 +108,22 @@ export default function TranslatorPage() {
           <div className="flex flex-col gap-6">
             <Card className="border-primary">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Languages /> Translation
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Languages /> Translation
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleListen}
+                    disabled={isAudioLoading || !result.translatedText}
+                  >
+                    {isAudioLoading ? (
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <Volume2 className="h-5 w-5" />
+                    )}
+                  </Button>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -114,6 +155,7 @@ export default function TranslatorPage() {
           </div>
         )}
       </div>
+      {audioSrc && <audio ref={audioRef} src={audioSrc} className="hidden" />}
     </div>
   );
 }
