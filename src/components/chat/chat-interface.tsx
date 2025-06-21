@@ -22,12 +22,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VocabularyEnhancementPanel from "./vocabulary-enhancement-panel";
 import { iconMap } from "@/lib/icons";
 import { useLanguageStore } from "@/hooks/use-language-store";
+import { useDailyChallengeStore } from "@/hooks/use-daily-challenge-store";
 
 interface ChatInterfaceProps {
   scenario: Scenario;
+  isDailyChallenge?: boolean;
 }
 
-export default function ChatInterface({ scenario }: ChatInterfaceProps) {
+export default function ChatInterface({ scenario, isDailyChallenge = false }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +39,9 @@ export default function ChatInterface({ scenario }: ChatInterfaceProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { targetLanguage } = useLanguageStore();
+  const { completeDailyChallenge } = useDailyChallengeStore();
+  const [isChallengeCompletedThisSession, setIsChallengeCompletedThisSession] = useState(false);
+
   const Icon = iconMap[scenario.icon];
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -86,6 +91,15 @@ export default function ChatInterface({ scenario }: ChatInterfaceProps) {
         content: aiResponseResult.data.aiResponse,
       };
       setMessages((prev) => [...prev, aiMessage]);
+
+      if (isDailyChallenge && !isChallengeCompletedThisSession) {
+        completeDailyChallenge();
+        setIsChallengeCompletedThisSession(true);
+        toast({
+            title: "Daily Challenge Complete!",
+            description: "You've completed your challenge for today. Keep the streak going!",
+        });
+      }
 
       const vocabResult = await getVocabularyEnhancement({
         userMessage: userMessage.content,
