@@ -6,7 +6,7 @@ export const scenarios: Scenario[] = [
     name: "At the Airport",
     description: "Navigate check-in, security, and boarding.",
     icon: "Plane",
-    backgroundImage: "airport terminal",
+    backgroundImage: "airport check-in",
   },
   {
     id: "cafe",
