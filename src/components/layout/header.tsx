@@ -14,6 +14,7 @@ import { useLanguageStore } from "@/hooks/use-language-store";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "./theme-toggle";
 
 export function Header() {
   const { targetLanguage, setTargetLanguage } = useLanguageStore();
@@ -79,6 +80,7 @@ export function Header() {
               ))}
             </SelectContent>
           </Select>
+          <ThemeToggle />
         </div>
       </div>
     </header>
