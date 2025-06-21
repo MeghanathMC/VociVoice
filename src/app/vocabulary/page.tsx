@@ -14,10 +14,10 @@ export default function VocabularyPage() {
             <header className="mb-8">
                 <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl font-headline flex items-center gap-3">
                     <NotebookText className="h-8 w-8 text-primary" />
-                    My Vocabulary
+                    Your Vocabulary
                 </h1>
                 <p className="mt-2 text-lg text-muted-foreground">
-                    Review your saved words and practice with flashcards.
+                    Master new words. Review your collection and sharpen your skills with flashcards.
                 </p>
             </header>
 

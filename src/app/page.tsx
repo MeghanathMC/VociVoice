@@ -25,9 +25,7 @@ export default function Home() {
             Welcome Back!
           </h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl">
-            Your language learning journey continues here. Tackle your daily
-            challenge to build your streak, or pick up where you left off in
-            another scenario.
+            Ready to continue your journey? Tackle today's challenge to build your streak, or practice freely in any scenario.
           </p>
         </header>
 

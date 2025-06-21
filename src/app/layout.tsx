@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PT_Sans } from "next/font/google";
+import { Lora, PT_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
@@ -9,11 +9,17 @@ import { ThemeProvider } from "@/components/layout/theme-provider";
 const ptSans = PT_Sans({
   subsets: ["latin"],
   weight: ["400", "700"],
-  variable: "--font-sans",
+  variable: "--font-body",
+});
+
+const lora = Lora({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-headline",
 });
 
 export const metadata: Metadata = {
-  title: "Talki - Language Learning Assistant",
+  title: "VociVoice - Speak Languages Confidently",
   description:
     "Practice speaking with an AI tutor in real-world scenarios.",
 };
@@ -25,22 +31,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+      <head />
       <body
         className={cn(
           "min-h-screen bg-background font-body antialiased",
-          ptSans.variable
+          ptSans.variable,
+          lora.variable
         )}
       >
         <ThemeProvider

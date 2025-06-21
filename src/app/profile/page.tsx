@@ -55,10 +55,10 @@ export default function ProfilePage() {
     <div className="container mx-auto max-w-4xl p-4 sm:p-6 lg:p-8">
       <header className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl font-headline">
-          My Profile
+          Your Profile
         </h1>
         <p className="mt-2 text-lg text-muted-foreground">
-          Update your personal details and preferences.
+          Personalize your learning experience.
         </p>
       </header>
       

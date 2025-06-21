@@ -133,10 +133,10 @@ export default function TranslatorPage() {
     <div className="container mx-auto max-w-4xl p-4 sm:p-6 lg:p-8">
       <header className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl font-headline">
-          Translator
+          Instant Translator
         </h1>
         <p className="mt-2 text-lg text-muted-foreground">
-          Translate from English to your target language and get detailed explanations.
+          Translate text instantly and gain deeper understanding with grammatical insights.
         </p>
       </header>
 
