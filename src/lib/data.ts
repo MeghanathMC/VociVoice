@@ -41,7 +41,7 @@ export const scenarios: Scenario[] = [
     name: "Asking for Directions",
     description: "Find your way around a new city.",
     icon: "HelpCircle",
-    backgroundImage: "city street map",
+    backgroundImage: "asking directions",
   },
 ];
 
