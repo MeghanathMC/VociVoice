@@ -35,7 +35,7 @@ export const scenarios: Scenario[] = [
     name: "Shopping at a Store",
     description: "Ask for items, sizes, and prices.",
     icon: "ShoppingBasket",
-    backgroundImage: "clothing store",
+    backgroundImage: "fashion store",
   },
   {
     id: "directions",
