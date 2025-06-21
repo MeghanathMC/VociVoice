@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VocabularyEnhancementPanel from "./vocabulary-enhancement-panel";
 import { iconMap } from "@/lib/icons";
+import { useLanguageStore } from "@/hooks/use-language-store";
 
 interface ChatInterfaceProps {
   scenario: Scenario;
@@ -35,6 +36,7 @@ export default function ChatInterface({ scenario }: ChatInterfaceProps) {
   >([]);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const { targetLanguage } = useLanguageStore();
   const Icon = iconMap[scenario.icon];
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +76,7 @@ export default function ChatInterface({ scenario }: ChatInterfaceProps) {
 
     const aiResponseResult = await getAiTutorResponse({
       scenario: scenario.name,
-      language: "english", // This would be dynamic in a real app
+      language: targetLanguage,
       userMessage: inputValue,
     });
 
@@ -88,7 +90,7 @@ export default function ChatInterface({ scenario }: ChatInterfaceProps) {
       const vocabResult = await getVocabularyEnhancement({
         userMessage: userMessage.content,
         aiResponse: aiMessage.content,
-        targetLanguage: "english",
+        targetLanguage: targetLanguage,
       });
 
       if (vocabResult.success && vocabResult.data) {

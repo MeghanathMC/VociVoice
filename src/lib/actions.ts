@@ -8,6 +8,10 @@ import {
   vocabularyEnhancement,
   type VocabularyEnhancementInput,
 } from "@/ai/flows/vocabulary-enhancement";
+import {
+  translateText,
+  type TranslateTextInput,
+} from "@/ai/flows/translator";
 
 export async function getAiTutorResponse(input: AiTutorConversationInput) {
   "use server";
@@ -35,6 +39,20 @@ export async function getVocabularyEnhancement(
     return {
       success: false,
       error: "An error occurred while fetching vocabulary suggestions.",
+    };
+  }
+}
+
+export async function getTranslation(input: TranslateTextInput) {
+  "use server";
+  try {
+    const response = await translateText(input);
+    return { success: true, data: response };
+  } catch (error) {
+    console.error("Error in getTranslation:", error);
+    return {
+      success: false,
+      error: "An error occurred while translating the text.",
     };
   }
 }
