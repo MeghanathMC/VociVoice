@@ -2,7 +2,6 @@ import type { Scenario } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import { iconMap } from "@/lib/icons";
 
 interface ScenarioCardProps {
@@ -12,19 +11,8 @@ interface ScenarioCardProps {
 const ScenarioCard = ({ scenario }: ScenarioCardProps) => {
   const Icon = iconMap[scenario.icon];
   return (
-    <Link href={`/chat/${scenario.id}`} className="group block">
-      <Card className="h-full overflow-hidden transition-all duration-300 ease-in-out hover:shadow-lg hover:border-primary">
-        <div className="relative h-40 w-full">
-            <Image 
-                src={`https://placehold.co/600x400.png`} 
-                alt={scenario.name} 
-                fill
-                objectFit="cover"
-                data-ai-hint={scenario.backgroundImage}
-                className="transition-transform duration-300 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-        </div>
+    <Link href={`/chat/${scenario.id}`} className="group block h-full">
+      <Card className="h-full transition-all duration-300 ease-in-out hover:shadow-lg hover:border-primary">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
