@@ -14,3 +14,11 @@ export interface ChatMessage {
 }
 
 export type VocabularySuggestion = VocabularyEnhancementOutput["suggestedVocabulary"][0];
+
+export interface VocabularyItem {
+    word: string;
+    context: string;
+    translation: string;
+    definition: string;
+    targetLanguage: string;
+}

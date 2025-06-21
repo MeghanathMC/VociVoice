@@ -12,6 +12,24 @@ import {
   translateText,
   type TranslateTextInput,
 } from "@/ai/flows/translator";
+import { 
+  getWordDefinition,
+  type WordDefinitionInput
+} from "@/ai/flows/word-definition";
+
+export async function getWordDefinitionAction(input: WordDefinitionInput) {
+  "use server";
+  try {
+    const response = await getWordDefinition(input);
+    return { success: true, data: response };
+  } catch (error) {
+    console.error("Error in getWordDefinitionAction:", error);
+    return {
+      success: false,
+      error: "An error occurred while defining the word.",
+    };
+  }
+}
 
 export async function getAiTutorResponse(input: AiTutorConversationInput) {
   "use server";

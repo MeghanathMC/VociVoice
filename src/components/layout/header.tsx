@@ -50,6 +50,17 @@ export function Header() {
             >
               Translator
             </Link>
+            <Link
+              href="/vocabulary"
+              className={cn(
+                buttonVariants({
+                  variant: pathname === "/vocabulary" ? "secondary" : "ghost",
+                  size: "sm",
+                })
+              )}
+            >
+              Vocabulary
+            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-4">
