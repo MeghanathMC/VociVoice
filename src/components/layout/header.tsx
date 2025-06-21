@@ -1,3 +1,4 @@
+
 "use client";
 
 import { MessageSquareHeart } from "lucide-react";
@@ -14,7 +15,7 @@ import { useLanguageStore } from "@/hooks/use-language-store";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
-import { ThemeToggle } from "./theme-toggle";
+import { UserNav } from "./user-nav";
 
 export function Header() {
   const { targetLanguage, setTargetLanguage } = useLanguageStore();
@@ -62,25 +63,38 @@ export function Header() {
             >
               Vocabulary
             </Link>
+             <Link
+              href="/profile"
+              className={cn(
+                buttonVariants({
+                  variant: pathname === "/profile" ? "secondary" : "ghost",
+                  size: "sm",
+                })
+              )}
+            >
+              Profile
+            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-4">
-          <p className="text-sm font-medium text-muted-foreground hidden sm:block">
-            Target Language:
-          </p>
-          <Select value={targetLanguage} onValueChange={setTargetLanguage}>
-            <SelectTrigger className="w-[120px]">
-              <SelectValue placeholder="Language" />
-            </SelectTrigger>
-            <SelectContent>
-              {languages.map((lang) => (
-                <SelectItem key={lang.value} value={lang.value}>
-                  {lang.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <ThemeToggle />
+          <div className="hidden sm:flex items-center gap-2">
+            <p className="text-sm font-medium text-muted-foreground">
+              Target Language:
+            </p>
+            <Select value={targetLanguage} onValueChange={setTargetLanguage}>
+              <SelectTrigger className="w-[120px]">
+                <SelectValue placeholder="Language" />
+              </SelectTrigger>
+              <SelectContent>
+                {languages.map((lang) => (
+                  <SelectItem key={lang.value} value={lang.value}>
+                    {lang.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <UserNav />
         </div>
       </div>
     </header>

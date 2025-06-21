@@ -1,3 +1,4 @@
+
 import type { Scenario } from "@/lib/types";
 
 export const scenarios: Scenario[] = [
@@ -41,7 +42,7 @@ export const scenarios: Scenario[] = [
     name: "Asking for Directions",
     description: "Find your way around a new city.",
     icon: "HelpCircle",
-    backgroundImage: "asking directions",
+    backgroundImage: "person asking directions",
   },
 ];
 
@@ -58,4 +59,17 @@ export const languages = [
     { value: "japanese", label: "Japanese" },
     { value: "italian", label: "Italian" },
     { value: "chinese", label: "Chinese" },
+];
+
+export const nativeLanguages = [
+    { value: "english", label: "English" },
+    { value: "spanish", label: "Spanish" },
+    { value: "french", label: "French" },
+    { value: "german", label: "German" },
+    { value: "japanese", label: "Japanese" },
+    { value: "italian", label: "Italian" },
+    { value: "chinese", label: "Chinese" },
+    { value: "portuguese", label: "Portuguese" },
+    { value: "russian", label: "Russian" },
+    { value: "hindi", label: "Hindi" },
 ];
