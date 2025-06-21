@@ -18,12 +18,12 @@ const ScenarioCard = ({ scenario }: ScenarioCardProps) => {
             <Image 
                 src={`https://placehold.co/600x400.png`} 
                 alt={scenario.name} 
-                layout="fill" 
+                fill
                 objectFit="cover"
                 data-ai-hint={scenario.backgroundImage}
                 className="transition-transform duration-300 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-black/40"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
         </div>
         <CardHeader>
           <div className="flex items-center justify-between">

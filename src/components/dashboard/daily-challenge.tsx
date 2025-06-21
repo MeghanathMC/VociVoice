@@ -23,7 +23,7 @@ export default function DailyChallenge({ scenario }: DailyChallengeProps) {
           <span>{streak} Day Streak</span>
         </div>
       </div>
-      <div className="border-4 border-amber-400 rounded-xl p-1 shadow-lg bg-gradient-to-br from-amber-300 to-yellow-400">
+      <div className="rounded-xl p-1 shadow-lg bg-gradient-to-br from-accent via-primary/70 to-primary">
         <ScenarioCard scenario={scenario} />
       </div>
     </section>

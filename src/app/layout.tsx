@@ -13,7 +13,7 @@ const ptSans = PT_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "VociVoice - Language Learning Assistant",
+  title: "Talki - Language Learning Assistant",
   description:
     "Practice speaking with an AI tutor in real-world scenarios.",
 };
