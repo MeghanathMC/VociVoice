@@ -20,6 +20,7 @@ import SoundwaveLoader from "./soundwave-loader";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VocabularyEnhancementPanel from "./vocabulary-enhancement-panel";
+import { iconMap } from "@/lib/icons";
 
 interface ChatInterfaceProps {
   scenario: Scenario;
@@ -34,6 +35,7 @@ export default function ChatInterface({ scenario }: ChatInterfaceProps) {
   >([]);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const Icon = iconMap[scenario.icon];
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -117,7 +119,7 @@ export default function ChatInterface({ scenario }: ChatInterfaceProps) {
       <CardHeader>
         <div className="flex items-center gap-4">
           <div className="bg-primary/10 p-3 rounded-lg">
-            <scenario.icon className="h-6 w-6 text-primary" />
+            {Icon && <Icon className="h-6 w-6 text-primary" />}
           </div>
           <div>
             <CardTitle className="font-headline text-2xl">
